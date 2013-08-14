@@ -1,6 +1,6 @@
 "============================================================================
 "File:        typescript.vim
-"Description: TypeScript syntax checker. For TypeScript v0.8.0
+"Description: TypeScript syntax checker. For TypeScript v0.9
 "Maintainer:  Bill Casarin <bill@casarin.ca>
 "============================================================================
 
@@ -17,11 +17,14 @@ endfunction
 function! SyntaxCheckers_typescript_tsc_GetLocList()
     let makeprg = syntastic#makeprg#build({
         \ 'exe': 'tsc',
-        \ 'post_args': '--out ' . syntastic#util#DevNull(),
+        \ 'post_args': '--out ' . syntastic#util#DevNull() . ' --module commonjs',
         \ 'filetype': 'typescript',
         \ 'subchecker': 'tsc' })
 
-    let errorformat = '%f %#(%l\,%c): %m'
+    let errorformat =
+        \ '%E%f(%l\,%c):\ error\ TS%n: %m,' .
+        \ '%Eerror\ TS%n:\ %m,' .
+        \ '%C%m'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
